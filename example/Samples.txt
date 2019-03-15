@@ -1,0 +1,2 @@
+Pat1_g	Pat1_t
+Pat1_g	Pat2_t
