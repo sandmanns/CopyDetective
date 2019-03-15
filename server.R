@@ -1,12 +1,3 @@
-library(shiny)
-library(shinyjs)
-library(openxlsx)
-library(DT)
-library(Biostrings)
-library(BSgenome)
-library(weights)
-
-
 shinyServer(function(input, output, session) {
     
     output$simulationUI<-renderUI({conditionalPanel(

@@ -1,9 +1,3 @@
-library(shiny)
-library(shinyjs)
-library(shinythemes)
-library(DT)
-library(shinydashboard)
-
 shinyUI(fluidPage(
     theme = shinytheme("flatly"),
     titlePanel(div("CopyDetective",
