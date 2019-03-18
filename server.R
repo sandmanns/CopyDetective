@@ -8,8 +8,8 @@ shinyServer(function(input, output, session) {
         condition="input.simulation=='No'",
         numericInput('simulations_nr',"Number of simulations to perform [10, 99999]",min=10,max=99999,value=500),
         hr(),
-        h4("A: Evaluate Tumor Ratios:"),
-        sliderInput('simulate_ratios',"Ratios to consider [%]",min=1,max=100,value=c(5,100)),
+        h4("A: Evaluate Tumor Rates:"),
+        sliderInput('simulate_rates',"Rates to consider [%]",min=1,max=100,value=c(5,100)),
         numericInput('simulate_steps',"In steps of...",min=1,max=100,value=5),
         hr(),
         h4("B: Evaluate Window Sizes:"),
@@ -17,12 +17,12 @@ shinyServer(function(input, output, session) {
         numericInput('simulate_window_steps',"In steps of... [100000, 59128983]",min=100000,max=59128983,value=1000000),
         hr(),
         radioButtons('simulation_optimization',label="Select strategy for detection threshold optimization",
-                     choices=c("Compromize (ratio and window size)","Force (ratio)","Force (window size)"),
-                     selected = "Compromize (ratio and window size)",inline = T)
+                     choices=c("Compromize (rate and window size)","Force (rate)","Force (window size)"),
+                     selected = "Compromize (rate and window size)",inline = T)
     )})
     output$simulationUI3<-renderUI({conditionalPanel(
-        condition="input.simulation_optimization=='Force (ratio)'",
-        numericInput('simulations_force_ratio',"Minimum ratio to consider [%]",min=1,max=100,value=10)
+        condition="input.simulation_optimization=='Force (rate)'",
+        numericInput('simulations_force_rate',"Minimum rate to consider [%]",min=1,max=100,value=10)
     )})
     output$simulationUI4<-renderUI({conditionalPanel(
         condition="input.simulation_optimization=='Force (window size)'",
@@ -86,8 +86,8 @@ shinyServer(function(input, output, session) {
                   2881033286)
         
         
-        detectionThresholds<-data.frame(Sample=samples_t[,1],Window_del=NA,Ratio_del=NA,
-                                        Window_dup=NA,Ratio_dup=NA)
+        detectionThresholds<-data.frame(Sample=samples_t[,1],Window_del=NA,Rate_del=NA,
+                                        Window_dup=NA,Rate_dup=NA)
 
         for(n in 1:length(samples_t[,1])){
             shinyjs::html("text", paste0("<br>Starting analysis with CopyDetective...<br><br>"), add = FALSE)
@@ -105,7 +105,7 @@ shinyServer(function(input, output, session) {
             tumor<-tumor[order(tumor[,1],tumor[,2]),]
             germline<-germline[order(germline[,1],germline[,2]),]
             
-            #Preparations: determine the cellular ratios and the confidence intervals
+            #Preparations: determine the cellular rates and the confidence intervals
             #for tumor
             del<-data.frame(upper=NA,mean=NA,lower=NA)
             dup<-data.frame(upper=NA,mean=NA,lower=NA)
@@ -174,20 +174,20 @@ shinyServer(function(input, output, session) {
             progress_sample$inc(1/4)
             if(input$simulation=="No"){
                 shinyjs::html("text", paste0("<br>","&nbsp&nbsp&nbspDetermining thresholds for CNV detection","<br>"), add = TRUE)
-                ratio<-seq(input$simulate_ratios[2],input$simulate_ratios[1],(-1)*input$simulate_steps)
-                ratio<-ratio/100
-                thresholds_del<-data.frame(ratio=ratio,minSnps=NA,window=NA)
-                thresholds_dup<-data.frame(ratio=ratio,minSnps=NA,window=NA)
-                shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbspA: Evaluating Tumor Ratios","<br>"), add = TRUE)  
+                rate<-seq(input$simulate_rates[2],input$simulate_rates[1],(-1)*input$simulate_steps)
+                rate<-rate/100
+                thresholds_del<-data.frame(rate=rate,minSnps=NA,window=NA)
+                thresholds_dup<-data.frame(rate=rate,minSnps=NA,window=NA)
+                shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbspA: Evaluating Tumor Rates","<br>"), add = TRUE)  
                 progress <- shiny::Progress$new()
-                progress$set(message = "A: Evaluating Tumor Ratios", value = 0)
-                for(j in 1:length(ratio)){
-                    #message("Ratio: ",ratio[j])
+                progress$set(message = "A: Evaluating Tumor Rates", value = 0)
+                for(j in 1:length(rate)){
+                    #message("Rate: ",rate[j])
                     progress$inc(input$simulate_steps/100)
                     thresholds_snps<-data.frame(snps=1:100,significant_del=0,significant_dup=0)
-                    vaf_del<-(ratio[j]-1)/(-2+ratio[j])
+                    vaf_del<-(rate[j]-1)/(-2+rate[j])
                     vaf_g<-0.5  
-                    vaf_dup<-1/(2+ratio[j])
+                    vaf_dup<-1/(2+rate[j])
                     simulations<-input$simulations_nr
                     
                     info_del<-data.frame(cov_tumor=rep(NA,100*simulations),vaf_tumor_del=rep(NA,100*simulations),
@@ -325,8 +325,8 @@ shinyServer(function(input, output, session) {
                         }
                         i<-i+1
                     }
-                    thresholds_del[ratio[j]==thresholds_del[,1],2]<-thresholds_snps[min(which(thresholds_snps[,2]>=0.95),100,na.rm=T),1]
-                    thresholds_dup[ratio[j]==thresholds_dup[,1],2]<-thresholds_snps[min(which(thresholds_snps[,3]>=0.95),100,na.rm=T),1]
+                    thresholds_del[rate[j]==thresholds_del[,1],2]<-thresholds_snps[min(which(thresholds_snps[,2]>=0.95),100,na.rm=T),1]
+                    thresholds_dup[rate[j]==thresholds_dup[,1],2]<-thresholds_snps[min(which(thresholds_snps[,3]>=0.95),100,na.rm=T),1]
                 }
                 progress$close()
                 
@@ -399,51 +399,51 @@ shinyServer(function(input, output, session) {
                 thresholds_dup<-cbind(thresholds_dup,Distance=sqrt(thresholds_dup[,1]**2+thresholds_dup[,4]**2))
                 
                 shinyjs::html("text", paste0("<br>","&nbsp&nbsp&nbspDetection thresholds for CNVs:","<br>"), add = TRUE)
-                if(input$simulation_optimization=="Compromize (ratio and window size)"){
-                    del_ratio<-thresholds_del[which.min(thresholds_del[,5]),1]
+                if(input$simulation_optimization=="Compromize (rate and window size)"){
+                    del_rate<-thresholds_del[which.min(thresholds_del[,5]),1]
                     del_window<-thresholds_del[which.min(thresholds_del[,5]),3]
                     shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspDeletions:",del_window,
-                                                 " bp; ",del_ratio*100,"% Tumor cells","<br>"), add = TRUE)
+                                                 " bp; ",del_rate*100,"% Tumor cells","<br>"), add = TRUE)
                     
-                    dup_ratio<-thresholds_dup[which.min(thresholds_dup[,5]),1]
+                    dup_rate<-thresholds_dup[which.min(thresholds_dup[,5]),1]
                     dup_window<-thresholds_dup[which.min(thresholds_dup[,5]),3]
                     shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspDuplications:",dup_window,
-                                                 " bp; ",dup_ratio*100,"% Tumor cells","<br>"), add = TRUE)
+                                                 " bp; ",dup_rate*100,"% Tumor cells","<br>"), add = TRUE)
                 }
-                if(input$simulation_optimization=="Force (ratio)"){
-                    del_ratio<-thresholds_del[which.min(thresholds_del[!is.na(threshlds_del[,5]),1]),1]
+                if(input$simulation_optimization=="Force (rate)"){
+                    del_rate<-thresholds_del[which.min(thresholds_del[!is.na(threshlds_del[,5]),1]),1]
                     del_window<-thresholds_del[which.min(thresholds_del[!is.na(threshlds_del[,5]),1]),3]
                     shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspDeletions:",del_window,
-                                                 " bp; ",del_ratio*100,"% Tumor cells","<br>"), add = TRUE)
+                                                 " bp; ",del_rate*100,"% Tumor cells","<br>"), add = TRUE)
                     
-                    dup_ratio<-thresholds_dup[which.min(thresholds_dup[!is.na(threshlds_dup[,5]),1]),1]
+                    dup_rate<-thresholds_dup[which.min(thresholds_dup[!is.na(threshlds_dup[,5]),1]),1]
                     dup_window<-thresholds_dup[which.min(thresholds_dup[!is.na(threshlds_dup[,5]),1]),3]
                     shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspDuplications:",dup_window,
-                                                 " bp; ",dup_ratio*100,"% Tumor cells","<br>"), add = TRUE)
+                                                 " bp; ",dup_rate*100,"% Tumor cells","<br>"), add = TRUE)
                 }
                 if(input$simulation_optimization=="Force (window size)"){
-                    del_ratio<-thresholds_del[which.min(thresholds_del[!is.na(threshlds_del[,5]),3]),1]
+                    del_rate<-thresholds_del[which.min(thresholds_del[!is.na(threshlds_del[,5]),3]),1]
                     del_window<-thresholds_del[which.min(thresholds_del[!is.na(threshlds_del[,5]),3]),3]
                     shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspDeletions:",del_window,
-                                                 " bp; ",del_ratio*100,"% Tumor cells","<br>"), add = TRUE)
+                                                 " bp; ",del_rate*100,"% Tumor cells","<br>"), add = TRUE)
                     
-                    dup_ratio<-thresholds_dup[which.min(thresholds_dup[!is.na(threshlds_dup[,5]),3]),1]
+                    dup_rate<-thresholds_dup[which.min(thresholds_dup[!is.na(threshlds_dup[,5]),3]),1]
                     dup_window<-thresholds_dup[which.min(thresholds_dup[!is.na(threshlds_dup[,5]),3]),3]
                     shinyjs::html("text", paste0("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspDuplications:",dup_window,
-                                                 " bp; ",dup_ratio*100,"% Tumor cells","<br>"), add = TRUE)
+                                                 " bp; ",dup_rate*100,"% Tumor cells","<br>"), add = TRUE)
                 }
                 
                 if(n==1){
                     detectionThresholds<-data.frame(Sample=c(samples_t[n,1]),Window_del=c(del_window),
-                                                    Ratio_del=c(del_ratio),Window_dup=c(dup_window),
-                                                    Ratio_dup=c(dup_ratio))
+                                                    Rate_del=c(del_rate),Window_dup=c(dup_window),
+                                                    Rate_dup=c(dup_rate))
                 }
                 if(n>1){
                     detectionThresholds<-rbind(detectionThresholds,data.frame(Sample=c(samples_t[n,1]),
                                                                               Window_del=c(del_window),
-                                                                              Ratio_del=c(del_ratio),
+                                                                              Rate_del=c(del_rate),
                                                                               Window_dup=c(dup_window),
-                                                                              Ratio_dup=c(dup_ratio)))
+                                                                              Rate_dup=c(dup_rate)))
                 }
                 output$table_dt <- renderDataTable(datatable(detectionThresholds))
                 write.table(detectionThresholds,paste0(input$output_folder,"DetectionThresholds.txt"),
