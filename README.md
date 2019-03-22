@@ -4,7 +4,7 @@ CopyDetective is a novel algorithm for detection threshold aware CNV calling in 
 
 ## Requirements
 
-To run CopyDetective, you need R (Version 3.5.2 or higher) and RStudio (Version 1.0.153 or higher).
+To run CopyDetective, you need R (Version 3.5.2 or higher) and shiny.
 
 
 ## Installation
@@ -14,7 +14,7 @@ To install CopyDetective, just download the R-scripts. All required packages are
 
 ## Running CopyDetective
 
-CopyDetective is available as a shiny GUI. 
+CopyDetective is available as a shiny GUI. You can run CopyDetective either by RStudio or by using `shiny::runApp()` in an R console.
 On the left, there are two tabs available for analysis:
 
 - *Perform analysis*: actual CNV calling is performed
