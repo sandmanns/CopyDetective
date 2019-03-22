@@ -1,3 +1,7 @@
+<p align="center">
+    <img height="150" src="https://uni-muenster.sciebo.de/s/BD2q8HfArBG7juF/download">
+</p>
+
 # CopyDetective
 
 CopyDetective is a novel algorithm for detection threshold aware CNV calling in matched whole-exome sequencing data. 
