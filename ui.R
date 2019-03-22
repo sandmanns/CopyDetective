@@ -9,7 +9,7 @@ shinyUI(fluidPage(
             tabPanel("Perform analysis",
                 h4("Input:"),
                 textInput('input_folder','Define input folder containing polymorphism information',
-                          "/mnt/home2/share/Analyses/Nijmegen_MDS_sequencing/R/CopyDetective/example_real/"),
+                          "/path/to/input/data/"),
                 fileInput('sampleFile',label = "Upload sample names file"),
                 h5("Note: a 2-column txt-file is required. The germline sample 
            names are defined in the first column, the matching tumor 
@@ -17,7 +17,7 @@ shinyUI(fluidPage(
                 hr(),
                 h4("Output:"),
                 textInput('output_folder','Define output folder',
-                          "/mnt/home2/share/Analyses/Nijmegen_MDS_sequencing/R/CopyDetective/example_real/output/"),
+                          "/path/to/output/"),
                 checkboxGroupInput('output_files',"Select output files",
                                    choices = c("Raw CNV calls","Merged CNV calls","Filtered CNV calls"),
                                    selected = c("Raw CNV calls","Merged CNV calls"),inline = T),
