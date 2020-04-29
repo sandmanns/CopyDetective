@@ -27,7 +27,7 @@ On the left, there are two tabs available for analysis:
 On the right, four output tabs are available:
 
 - *Log*: progress of the analysis
-- *Detection thresholds*: individual detection thresholds for every sample, including minimum CNV size and minimum cell rate for deletions and duplications
+- *Detection thresholds*: individual detection thresholds for every sample, including minimum CNV size and minimum cell fraction for deletions and duplications
 - *CNV calls*: merged CNV calls; if filtration by means of quality is selected, the calls are filted based on the selected filtration threshold
 - *Plots*: dependent on the selected options, up to four plots are displayed: 1) Raw CNV calls (all), 2) Raw CNV calls (sig), 3) Merged CNV calls, and 4) Filtered CNV calls
 
@@ -42,20 +42,19 @@ For the actual analysis with CopyDetective, several parameters are available.
 | Output | Output folder | Path to which output files will be written |
 || Output files | The following can be selected: Raw CNV calls, Merged CNV calls, Filtered CNV calls |
 || Output plots | The following can be selected: Raw CNV calls (all), Raw CNV calls (sig), Merged CNV calls, Filtered CNV calls |
-| 1. Simulation | Detection thresholds available? | Select either *yes* or *no*|
-||*yes*: Upload detection thresholds file| A txt-file containing the columns: Sample, Window_del, Rate_del, Window_dup and Rate_dup; an example is available in the *example* folder
+| 1. Quality Analysis | Detection thresholds available? | Select either *yes* or *no*|
+||*yes*: Upload detection thresholds file| A txt-file containing the columns: Sample, Window_del, CF_del, SNPs_del, Window_dup, CF_dup and SNPs_dup; an example is available in the *example* folder
 ||*no*: Number of simulations| 10-99999; default: 500|
-||*no*: Evaluate Tumor Rates: Rates to consider| 1-100; default: 5-100|
-||*no*: Evaluate Tumor Rates: In steps of...| 1-100; default: 5|
-||*no*: Evaluate Window sizes: Minimum window size to consider| 100,000-59,128,983; default: 1,000,000|
-||*no*: Evaluate Window sizes: In steps of...| 100,000-59,128,983; default: 1,000,000|
-||*no*: Strategy for detection threshold optimization| Select one of the following: Compromize (rate and window size), Force (rate), Force (window size)|
-||*no*: Force (rate)| Minimum rate to consider | 1-100; default: 10 |
-||*no*: Force (window size)| Minimum window size to consider | 100,000-59,128,983; default: 1,000,000 |
-|2. CNV calling|/|/|
+||*no*: Evaluate Cell Fractions: Fractions to consider| 1-100; default: 5-100|
+||*no*: Evaluate Cell Fractions: In steps of...| 1-100; default: 5|
+||*no*: Evaluate Window sizes: Percentile to consider for window selection | 0-100; default: 95|
+||*no*: Strategy for detection threshold optimization| Select one of the following: Compromize (cell fraction and window size), Force (cell fraction), Force (window size)|
+||*no*: Force (cell fraction)| Minimum (possible) cell fraction to consider | 1-100; default: 10 |
+||*no*: Force (window size)| Minimum (possible) window size to consider | 100,000-59,128,983; default: 1,000,000 |
+| 2. CNV calling | Desired sensitivity |0-1; default: 0.95|
 | 3. Merging | Maximum allowed distance between raw calls | 100,000-59128,983; default: 20,000,000|
 | 4. Filtration | Perform final filtration? | Select either *yes* or *no*|
-|| *yes*: Quality threshold | 0-50; default: 6.00|
+|| *yes*: Quality threshold | 0-600; default: 10.76|
 
 ## Example
 
