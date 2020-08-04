@@ -30,6 +30,8 @@ shinyUI(fluidPage(
                 radioButtons('simulation',label="Are detection thresholds already available?",
                              choices = c("No","Yes"),selected = "No",inline = T),
                 uiOutput("simulationUI"),
+                uiOutput("simulationUI1"),
+                uiOutput("simulationUI1.2"),
                 uiOutput("simulationUI2"),
                 uiOutput("simulationUI3"),
                 uiOutput("simulationUI4"),
