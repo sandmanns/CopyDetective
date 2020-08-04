@@ -44,7 +44,9 @@ For the actual analysis with CopyDetective, several parameters are available.
 || Output plots | The following can be selected: Raw CNV calls (all), Raw CNV calls (sig), Merged CNV calls, Filtered CNV calls |
 | 1. Quality Analysis | Detection thresholds available? | Select either *yes* or *no*|
 ||*yes*: Upload detection thresholds file| A txt-file containing the columns: Sample, Window_del, CF_del, SNPs_del, Window_dup, CF_dup and SNPs_dup; an example is available in the *example* folder
-||*no*: Number of simulations| 10-99999; default: 500|
+||*no*: How shall Quality Analysis be performed? | Select either *Exact* or *Simulation*|
+||*no* and *Exact*: VAF for polymorphisms in the control sample | Select either *Exact (variant calling results)* or *Simulated (expected value 0.5)*|
+||*no* and *Simulation*: Number of simulations| 10-99999; default: 500|
 ||*no*: Evaluate Cell Fractions: Fractions to consider| 1-100; default: 5-100|
 ||*no*: Evaluate Cell Fractions: In steps of...| 1-100; default: 5|
 ||*no*: Evaluate Window sizes: Percentile to consider for window selection | 0-100; default: 95|
