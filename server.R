@@ -112,8 +112,6 @@ shinyServer(function(input, output, session) {
         
         detectionThresholds<-data.frame(Sample=samples_t[,1],Window_del=NA,Rate_del=NA,
                                         Window_dup=NA,Rate_dup=NA)
-        
-        erwartungswerte<-data.frame(Sample=samples_t[,1],Germline=NA)
 
         for(n in 1:length(samples_t[,1])){
             shinyjs::html("text", paste0("<br>Starting analysis with CopyDetective...<br><br>"), add = FALSE)
@@ -130,9 +128,7 @@ shinyServer(function(input, output, session) {
             
             tumor<-tumor[order(tumor[,1],tumor[,2]),]
             germline<-germline[order(germline[,1],germline[,2]),]
-            
-            erwartungswerte[n,2]<-mean(germline[,9])
-            
+
             #Preparations: determine the cell fractions and the confidence intervals + information on coverage and the strand
             #for tumor
             progress_preprocess <- shiny::Progress$new()
@@ -1509,18 +1505,13 @@ shinyServer(function(input, output, session) {
                 shinyjs::html("text", paste0("<br>","&nbsp&nbsp&nbspNo CNVs detected","<br>"), add = TRUE)
             }
             progress_sample$close()
-            write.table(erwartungswerte,paste0(input$output_folder,"/Erwartungswerte.txt"),
-                        sep="\t",row.names = F,quote=F)
         }
         updateRadioButtons(session,"select_samples",choices=samples_t[,1],
                            selected = samples_t[length(samples_t[,1]),1],inline=T)
         
         write.table(detectionThresholds,paste0(input$output_folder,"/DetectionThresholds.txt"),
                     sep="\t",row.names = F,quote=F)
-        
-        write.table(erwartungswerte,paste0(input$output_folder,"/Erwartungswerte.txt"),
-                    sep="\t",row.names = F,quote=F)
-        
+
         shinyjs::html("text", paste0("<br>","Analysis complete","<br>"), add = TRUE)
     })
     
