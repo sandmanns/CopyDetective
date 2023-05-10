@@ -1,5 +1,5 @@
 <p align="center">
-    <img height="150" src="https://uni-muenster.sciebo.de/s/BD2q8HfArBG7juF/download">
+    <img height="150" src="https://uni-muenster.sciebo.de/s/fJVen9oxDOMBtnD/download">
 </p>
 
 # CopyDetective
