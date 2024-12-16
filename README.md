@@ -2,9 +2,16 @@
     <img height="150" src="https://uni-muenster.sciebo.de/s/fJVen9oxDOMBtnD/download">
 </p>
 
-# CopyDetective
+# CopyDetective: Detection threshold–aware copy number variant calling in whole-exome sequencing data
 
 CopyDetective is a novel algorithm for detection threshold aware CNV calling in matched whole-exome sequencing data. 
+
+<p align="center">
+    <img height="500" src="https://uni-muenster.sciebo.de/s/9pSl2uMC3TY5wul/download">
+</p>
+
+Sarah Sandmann, Marius Wöste, Aniek O de Graaf, Birgit Burkhardt, Joop H Jansen, Martin Dugas, CopyDetective: Detection threshold–aware copy number variant calling in whole-exome sequencing data, GigaScience, Volume 9, Issue 11, November 2020, giaa118, https://doi.org/10.1093/gigascience/giaa118
+
 
 ## Requirements
 
